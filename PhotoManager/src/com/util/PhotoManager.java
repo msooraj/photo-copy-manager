@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Logger;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -22,17 +23,21 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 public class PhotoManager {
+  private static final Logger LOGGER = Logger.getLogger(PhotoManager.class.getName());
 
   public static void main(String[] args) throws IOException, ImageProcessingException {
-    validateInputs(args);
-    String sourcePath = args[0];
-    String destPath = args[1];
-    System.out.println("Source Path:" + sourcePath);
 
-    System.out.println("Destination Path:" + destPath);
+    validateInputs(args);
+
+    String sourcePath = args[0];
+    LOGGER.info("Source Path:" + sourcePath);
+
+    String destPath = args[1];
+    LOGGER.info("Destination Path:" + destPath);
+
     String extensionFilters = getExtensionFilters(args);
     copyFiles(sourcePath, destPath, extensionFilters);
-    System.out.println("Files copy completed.");
+    LOGGER.info("Files copy completed.");
   }
 
   private static FileTime readTimeTaken(Path path) throws ImageProcessingException, IOException {
@@ -71,16 +76,16 @@ public class PhotoManager {
 
   private static void validateInputs(String[] args) throws IOException {
     if (args.length < 2) {
-      System.out.println("Please provide source and destination folders.");
+      LOGGER.info("Please provide source and destination folders.");
       System.exit(0);
     }
     if (Files.notExists(Paths.get(args[0]))) {
-      System.out.println("Invalid source path.");
+      LOGGER.info("Invalid source path.");
       System.exit(0);
     }
     if (Files.notExists(Paths.get(args[1]))) {
       Files.createDirectories(Paths.get(args[1]));
-      System.out.println("Creating destination folder:" + args[1]);
+      LOGGER.info("Creating destination folder:" + args[1]);
     }
   }
 
@@ -105,12 +110,12 @@ public class PhotoManager {
   private static void copyFile(Path path, FileTime ft, String destFullPath) throws IOException {
     Path dstPath = FileSystems.getDefault().getPath(destFullPath + "/" + path.getFileName());
     if (Files.notExists(dstPath)) {
-      System.out.println("Copying file:" + path.getFileName());
+      LOGGER.info("Copying file:" + path.getFileName());
       Files.copy(path, dstPath, StandardCopyOption.COPY_ATTRIBUTES);
       BasicFileAttributeView attributes = Files.getFileAttributeView(dstPath, BasicFileAttributeView.class);
       attributes.setTimes(ft, ft, ft);
     } else {
-      System.out.println(path.getFileName() + " already exists.");
+      LOGGER.info(path.getFileName() + " already exists.");
     }
   }
 
