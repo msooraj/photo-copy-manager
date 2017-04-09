@@ -31,6 +31,7 @@ public class PhotoManager {
     String sourcePath = args[0];
     String destPath = args[1];
     System.out.println("Source Path:" + sourcePath);
+
     System.out.println("Destination Path:" + destPath);
     String extensionFilters = getExtensionFilters(args);
     copyFiles(sourcePath, destPath, extensionFilters);
