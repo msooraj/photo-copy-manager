@@ -4,4 +4,4 @@ Utility to copy and manage photos from memmory card to disk. This will arrange f
 
 Use command line to execute
 
-java -jar PhotoManager.jar <Source Path> <Destination Path> <Comma seperated extensions>
+java -jar PhotoManager.jar < Source Path > < Destination Path> < Comma seperated extensions>
